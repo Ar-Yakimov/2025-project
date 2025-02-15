@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <h1>Ваши заметки:</h1>
+        {% if notes|length > 0 %}
+            {% for elem in notes %}
+                <div class="alert alert-info">
+                    <h2>{{ elem.title }}</h2>
+                    <p><b>Дата: {{ elem.date.date() }}</b></p>
+                    <a href="/notes/{{ elem.id }}" class="btn btn-warning">Смотреть</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <h1><b>Пока тут пусто...</b></h1>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

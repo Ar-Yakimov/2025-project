@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container-fluid">
+    <h1>Update note</h1>
+    <form method="post">
+        <input type="text" name="title" id="title" class="form-control" placeholder="Введите название" value="{{ note.title }}"><br>
+        <textarea name="text" id="text" class="form-control" placeholder="Введите заметку">{{ note.text }}</textarea><br>
+        <input type="submit" class="bth bth-success" value="Обновить"><br>
+    </form>
+</div>
+{% endblock %}

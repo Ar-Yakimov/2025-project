@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
@@ -46,6 +46,7 @@ talisman = Talisman(app, content_security_policy=csp)
 def index():
     return render_template("index.html")
 
+
 @app.route('/create', methods=['GET', 'POST'])
 def create_note():
     if request.method == "GET":
@@ -58,9 +59,49 @@ def create_note():
         try:
             database.session.add(new_note)
             database.session.commit()
-            return redirect('/')
+            return redirect('/notes')
         except Exception as error:
             return f"Произошла ошибка: {error}"
+
+
+@app.route("/notes")
+def show_notes():
+    notes = Note.query.order_by(Note.date.desc()).all()
+    return render_template("notes.html", notes=notes)
+
+
+@app.route("/notes/<int:id>")
+def read_note(id):
+    note = database.session.get(Note, id)
+    return render_template("note_detailed.html", note=note)
+
+
+@app.route("/notes/<int:id>/del")
+def remove_note(id):
+    note = database.session.get(Note, id)
+
+    try:
+        database.session.delete(note)
+        database.session.commit()
+        return redirect("/notes")
+    except Exception as error:
+        return f"Произошла ошибка: {error}"
+
+
+@app.route("/notes/<int:id>/upd", methods=["POST", "GET"])
+def change_note(id):
+    note = database.session.get(Note, id)
+    if request.method == "POST":
+        note.title = request.form['title']
+        note.text = request.form['text']
+
+        try:
+            database.session.commit()
+            return redirect('/notes')
+        except Exception as error:
+            return f"Произошла ошибка: {error}"
+    else:
+        return render_template("update.html", note=note)
 
 
 if __name__ == "__main__":
