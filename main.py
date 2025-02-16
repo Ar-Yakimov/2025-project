@@ -1,16 +1,16 @@
 from datetime import datetime
-
+from os import environ
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, abort, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 from werkzeug.security import generate_password_hash, check_password_hash
 
-load_dotenv()
+load_dotenv("/instance/config.env")
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///data.db'
-app.config["SECRET_KEY"] = pass
+app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("DATABASE_URI")
+app.config["SECRET_KEY"] = environ.get("SECRET_KEY")
 database = SQLAlchemy(app)
 with app.app_context():
     database.create_all()
