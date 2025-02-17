@@ -1,13 +1,10 @@
 from datetime import datetime, UTC
 from os import environ
 
-from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, abort, flash, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 from werkzeug.security import generate_password_hash, check_password_hash
-
-load_dotenv(r"instance/config.env")
 
 app = Flask(__name__)
 app.config.update(SQLALCHEMY_DATABASE_URI=environ.get("DATABASE_URI"),
