@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from os import environ
 
 from dotenv import load_dotenv
@@ -10,10 +10,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 load_dotenv(r"instance/config.env")
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("DATABASE_URI")
-app.config["SECRET_KEY"] = environ.get("SECRET_KEY")
-app.config["SESSION_TYPE"] = "filesystem"
-app.config['SESSION_PERMANENT'] = False
+app.config.update(SQLALCHEMY_DATABASE_URI=environ.get("DATABASE_URI"),
+                  SECRET_KEY=environ.get("SECRET_KEY"),
+                  SESSION_TYPE="filesystem",
+                  SESSION_PERMANENT=False)
 database = SQLAlchemy(app)
 
 
@@ -22,7 +22,7 @@ class Note(database.Model):
     user_id = database.Column(database.Integer, database.ForeignKey('user.id'), nullable=False)
     title = database.Column(database.String(35), nullable=False)
     text = database.Column(database.Text, nullable=False)
-    date = database.Column(database.DateTime, default=datetime.utcnow)
+    date = database.Column(database.DateTime, default=datetime.now(UTC))
 
     def __repr__(self):
         return f"<Note {self.id}>"
@@ -153,12 +153,17 @@ def change_note(id):
     if note.user_id != session['user_id']:
         abort(403)
 
-    try:
-        database.session.delete(note)
-        database.session.commit()
-        return redirect(url_for('show_notes'))
-    except Exception as error:
-        return f"Произошла ошибка: {error}"
+    if request.method == "POST":
+        try:
+            note.title = request.form['title']
+            note.text = request.form['text']
+            database.session.commit()
+            return redirect(url_for('show_notes'))
+        except Exception as error:
+            database.session.rollback()
+            return f"Произошла ошибка: {error}"
+    else:
+        return render_template('update.html', note=note)
 
 
 @app.route("/register", methods=["POST", "GET"])
@@ -176,7 +181,7 @@ def register():
                 new_user.set_password(new_password)
                 database.session.add(new_user)
                 database.session.commit()
-                return redirect(url_for('notes'))
+                return redirect(url_for('templates/notes.html'))
             except Exception as error:
                 return f"Произошла ошибка: {error}"
     else:
@@ -233,7 +238,3 @@ def forbidden(error):
 @app.errorhandler(404)
 def dont_exist(error):
     return "Ошибка 404: Данный url не существует!"
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
