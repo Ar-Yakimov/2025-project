@@ -155,7 +155,7 @@ def change_note(id):
             note.title = request.form['title']
             note.text = request.form['text']
             database.session.commit()
-            return redirect(url_for('show_notes'))
+            return redirect("/notes")
         except Exception as error:
             database.session.rollback()
             return f"Произошла ошибка: {error}"
@@ -178,6 +178,7 @@ def register():
                 new_user.set_password(new_password)
                 database.session.add(new_user)
                 database.session.commit()
+                session["user_id"] = new_user.id
                 return redirect("/notes")
             except Exception as error:
                 return f"Произошла ошибка: {error}"
