@@ -19,10 +19,12 @@
                 <img class="bi me-2" src="{{ url_for('static', filename='images/icon.png') }}" width="40" height="40">
             </a>
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="/create" class="nav-link px-2 link-secondary"><font><font>Создать заметку</font></font></a>
-                </li>
-                <li><a href="/notes" class="nav-link px-2 link-secondary"><font><font>Просмотреть заметки</font></font></a>
-                </li>
+                {% if 'user_id' in session %}
+                    <li><a href="/create" class="nav-link px-2 link-secondary"><font><font>Создать заметку</font></font></a>
+                    </li>
+                    <li><a href="/notes" class="nav-link px-2 link-secondary"><font><font>Просмотреть заметки</font></font></a>
+                    </li>
+                {% endif %}
             </ul>
             <div class="dropdown ms-auto">
                 <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
