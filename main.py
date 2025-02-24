@@ -194,14 +194,14 @@ def sing_in():
 
         if not user:
             flash("Неверный логин!")
-            return redirect("index.html")
+            return redirect("/notes")
 
         if not user.check_password(password):
             flash("Неверный пароль!")
-            return redirect("index.html")
+            return redirect("/")
 
         session['user_id'] = user.id
-        return redirect("notes.html")
+        return redirect("/notes")
     else:
         return render_template("index.html")
 
@@ -209,7 +209,7 @@ def sing_in():
 @app.route("/logout")
 def logout():
     session.pop("user_id", None)
-    return redirect(url_for("index"))
+    return redirect("/")
 
 
 @app.route("/profile")
