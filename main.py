@@ -171,7 +171,7 @@ def register():
 
         if database.session.query(User).filter_by(login=new_login).first():
             flash("Пользователь уже существует!")
-            return redirect(url_for('index'))
+            return redirect("register.html")
         else:
             try:
                 new_user = User(login=new_login)
@@ -194,14 +194,14 @@ def sing_in():
 
         if not user:
             flash("Неверный логин!")
-            return redirect(url_for('index'))
+            return redirect("index.html")
 
         if not user.check_password(password):
             flash("Неверный пароль!")
-            return redirect(url_for('index'))
+            return redirect("index.html")
 
         session['user_id'] = user.id
-        return redirect(url_for('show_notes'))
+        return redirect("notes.html")
     else:
         return render_template("index.html")
 
