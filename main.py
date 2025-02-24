@@ -171,14 +171,14 @@ def register():
 
         if database.session.query(User).filter_by(login=new_login).first():
             flash("Пользователь уже существует!")
-            return redirect("register.html")
+            return redirect("/")
         else:
             try:
                 new_user = User(login=new_login)
                 new_user.set_password(new_password)
                 database.session.add(new_user)
                 database.session.commit()
-                return redirect(url_for('templates/notes.html'))
+                return redirect("/notes")
             except Exception as error:
                 return f"Произошла ошибка: {error}"
     else:
@@ -224,7 +224,7 @@ def info():
         return render_template("profile.html", user=user)
     else:
         flash("Пользователь не найден")
-        return redirect(url_for("index"))
+        return redirect("/")
 
 
 @app.errorhandler(403)
