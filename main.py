@@ -66,7 +66,7 @@ talisman = Talisman(app, content_security_policy=csp)
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return redirect("/sing-in")
 
 
 @app.route('/create', methods=['GET', 'POST'])
@@ -182,7 +182,7 @@ def register():
             except Exception as error:
                 return f"Произошла ошибка: {error}"
     else:
-        abort(403)
+        return render_template("register.html")
 
 
 @app.route("/sing-in", methods=["GET", "POST"])
@@ -203,7 +203,7 @@ def sing_in():
         session['user_id'] = user.id
         return redirect(url_for('show_notes'))
     else:
-        abort(403)
+        return render_template("index.html")
 
 
 @app.route("/logout")
