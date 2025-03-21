@@ -228,6 +228,23 @@ def info():
         return redirect("/")
 
 
+@app.route("/profile/del")
+def del_account():
+    if "user_id" not in session:
+        abort(403)
+
+    user = User.query.get(session["user_id"])
+    if user is None:
+        abort(404)
+
+    database.session.delete(user)
+    database.session.commit()
+
+    session.pop("user_id", None)
+
+    return redirect("/")
+
+
 @app.errorhandler(403)
 def forbidden(error):
     return "Ошибка 403: У вас нет доступа к этому url!"
