@@ -1,3 +1,13 @@
 font {
     vertical-align: inherit;
 }
+
+#passwordCell {
+    width: 100%;
+}
+
+#realPassword {
+    word-break: break-all;
+    display: block;
+    width: 100%;
+}

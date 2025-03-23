@@ -21,13 +21,13 @@
                         </tr>
                         <tr>
                             <th>Password Hash</th>
-                            <td id="passwordCell">
+                            <td id="passwordCell" style="width: 100%;">
                                 <span id="maskedPassword" title="Hover to reveal"
                                       style="cursor: pointer; display: inline-block; word-break: break-all;">
                                     {{ '*' * 12 }}
                                 </span>
                                 <span id="realPassword"
-                                      style="display: none; word-break: break-all; display: inline-block;">
+                                      style="display: none; word-break: break-all; display: block; width: 100%;">
                                     {{ user.password_hash }}
                                 </span>
                             </td>
